@@ -23,8 +23,9 @@ def add(a,b):
 def get_moves(file):
     lst = []
     f = open(file,"r")
+    
     for line in f:
-        reg = re.search("([RLUD]) (\d)",line)
+        reg = re.search("([RLUD]) (\d+)",line)
         d = None
         if reg.group(1) == 'R':
             d = (1,0)
@@ -41,20 +42,16 @@ def run(file):
     moves = get_moves(file)
     h = (0,0)
     t = (0,0)
-    visited = {}
-    once = 0
+    visited = set()
     for m in moves:
         count = m[1]
         while count > 0:
             h = add(h,m[0])
-            if get_distance(h,t) > 1:
+            if get_distance(h,t) >= 2:
                 t = add(t,move_closest(h,t))
-                if t in visited:
-                    visited[t] += 1
-                else:
-                    visited[t] = 1
+                visited.add(t)
             count -= 1
-            print("H:",h," ","T:",t)
+            #print("H:",h," ","T:",t)
     return visited
 
 def get_once(m):
@@ -64,3 +61,4 @@ def get_once(m):
             count +=1
     return count
     
+print(len(run("09-22-input.txt")))
