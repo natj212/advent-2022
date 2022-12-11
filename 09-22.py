@@ -14,7 +14,7 @@ def move_closest(h,t):
         
 
 def get_distance(h,t):
-    return math.sqrt(pow(t[0] - h[0],2) + pow(t[1] - h[1],2))
+    return pow(t[0] - h[0],2) + pow(t[1] - h[1],2)
 
 
 def add(a,b):
@@ -40,25 +40,16 @@ def get_moves(file):
 
 def run(file):
     moves = get_moves(file)
-    h = (0,0)
-    t = (0,0)
+    knots = [(0,0)] * 10
     visited = set()
     for m in moves:
         count = m[1]
         while count > 0:
-            h = add(h,m[0])
-            if get_distance(h,t) >= 2:
-                t = add(t,move_closest(h,t))
-                visited.add(t)
+            knots[0] = add(knots[0],m[0])
+            for i in range(0,9):
+                if get_distance(knots[i],knots[i+1]) >= 4:
+                    knots[i+1] = add(knots[i+1],move_closest(knots[i],knots[i+1]))
+            visited.add(knots[9])
             count -= 1
-            #print("H:",h," ","T:",t)
-    return visited
+    return len(visited)
 
-def get_once(m):
-    count = 0
-    for v in m.values():
-        if v == 1:
-            count +=1
-    return count
-    
-print(len(run("09-22-input.txt")))
